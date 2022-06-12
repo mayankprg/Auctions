@@ -1,0 +1,41 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+<section>
+    <h1>Active Listings</h1>
+</section>
+    
+
+
+<div class="container">
+    {% for item in listings %}
+        <div class="item">
+            <a href="{% url 'listitem' item.id %}">
+                <div class="img">
+                    <img src="{{ item.url }}" alt="Listing Image">
+                </div>
+            </a>
+            <div class="about">
+                <a href="{% url 'listitem' item.id %}">
+                    <p class="title">{{item.title}}</p>
+                </a> 
+                <article id="about-1">
+                    <p class="cursive indent">{{item.discription|truncatechars:35}}</p>
+                </article> 
+                <article id="about-2">
+                    {% if item.highest.bid %}
+                    <p><span class="bold italic">Current Price: {{item.highest.bid| usd}}</span></p>
+                    {% else %}
+                    <p><span class="bold italic">Starting Price:{{item.offer| usd}}</span></p>
+                    {%endif%}
+                </article>
+                <article id="about-3">
+                    <p class="sm"><span class="italic bold">Created:</span> {{item.created}}</p>
+                </article>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+    
+{% endblock %}

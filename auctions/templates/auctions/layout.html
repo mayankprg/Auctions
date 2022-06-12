@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width", initial-scale="1.0">
+        <title>{% block title %}Auctions{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link type="text/css" href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+        {% block styles %}{% endblock %}
+    </head>
+    <body>
+        <header>
+            <h1>Auctions</h1>
+                <nav>
+                    <ul>
+                        <li>
+                            <a href="{% url 'index' %}">Active Listings</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'createlisting' %}">Create Listing</a>
+                        </li>
+                        {% if user.is_authenticated %}
+                            <li>
+                                <a href="{% url 'watchlist' %}">Watch List</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'categories' %}">Categories</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'logout' %}">Log Out</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{% url 'register' %}">Register</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'login' %}">Log In</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+        </header>
+        
+        <main>
+            <div>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR  %}
+                            <div class="alert alert-danger" role="alert">
+                                {{message}}
+                            </div>
+                        {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                            <div class="alert alert-success" role="alert">
+                                {{message}}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            {% block body %}
+
+            {% endblock %}
+        </main>
+        
+    </body>
+</html>
