@@ -155,14 +155,19 @@ def end_auction(request, id_listing):
     """ Ends auction """
     listing = Listing.objects.get(id=id_listing)
     current_user = User.objects.get(username=request.user)
+    
     if request.method == "POST":
         if current_user == listing.author:
-                # validate author's form 
-                form_data = AuctionStatus(request.POST)
-                if form_data.is_valid():
-                    if form_data.cleaned_data['status']:
-                        # end auction
-                        listing.status = False
+            # validate author's form 
+            form_data = AuctionStatus(request.POST)
+            if form_data.is_valid():
+                if form_data.cleaned_data['status']:
+                    # end auction
+                    listing.status = False
+                    listing.save()
+                    if Bid.objects.filter(bid=listing.highest, listing=listing).exists():
+                        bid = Bid.objects.filter(bid=listing.highest, listing=listing)
+                        listing.winner = bid.bidder
                         listing.save()
                         return redirect("listitem", listing.id)
 
@@ -184,7 +189,7 @@ def bid(request, id_listing):
                 if float(bid_form_data.cleaned_data['bid']) > bid_list.bid:
                     bid = Bid(bidder=current_user, bid=float(bid_form_data.cleaned_data['bid']), listing=listing)
                     bid.save()
-                    listing.highest = bid
+                    listing.highest = bid.bid
                     listing.save()
                     messages.success(request, "Bid Placed")
                     return render(request, "auctions/listitem.html", {
@@ -204,7 +209,7 @@ def bid(request, id_listing):
                 if float(bid_form_data.cleaned_data['bid']) > listing.offer:
                     bid = Bid(bidder=current_user, bid=float(bid_form_data.cleaned_data['bid']), listing=listing)
                     bid.save()
-                    listing.highest = bid
+                    listing.highest = bid.bid
                     listing.save()
                     messages.success(request, "Bid Placed")
                     return render(request, "auctions/listitem.html", {
