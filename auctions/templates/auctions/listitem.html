@@ -4,44 +4,68 @@
 {% block body %}
 <h1>{{listing.bid_user.bidder}}</h1>
 
-		<img src="{{listing.url}}" alt="Image of {{listing.title}}">
-	
+<div class="listitem flex">
+	<div class="container-fluid ">
+		<img src="{{listing.url}}" id="listing-img" class="img-fluid" alt="Image of {{listing.title}}">
+	</div>
+			
+	<div class="info flex">
 
-		<h2>{{listing.title}}</h2>
-		<p>{{listing.discription}}</p>
-			<h3>Starting Price</h3>
-			<h4>{{listing.offer| usd}}</h4>
+		{% if listing not in user.listings.all %}
+			<div class="form-group fit-inline-block" id="item-add">
+				<form action="{% url 'watchlist' listing.id %}" method="POST">
+					{% csrf_token %}
+					<input class="btn btn-primary" type="submit" value="Add To Watch List">
+				</form>
+			</div>
+		{%else%}
+			<div class="form-group fit-inline-block" id="item-add">
+				<form action="{% url 'removelisting' listing.id %}" method="POST">
+					{% csrf_token %}
+					<input class="btn btn-danger" type="submit" value="Remove From WatchList">
+				</form>
+			</div>	
+		{% endif %}
+		<div  >
+			<p class="h1 ">{{listing.title}}</p>
+		</div>
+		<div>
+			<p class="lead">{{listing.discription}}</p>
+		</div>
+		<div id="author">
+			<p class="h5"><span class="font-weight-bold">Author:</span> <span class="cursive">{{listing.author}}</span></p>
+			<footer class="blockquote-footer">Created: <cite title="Source Title">{{listing.created}}</cite></footer>
+		</div>
 
-
+		<div>
+			{% if listing.highest and listing.status %}
+				<p class="h2"><span class="indent">Current Bid:</span> {{listing.highest| usd}}</p>	
+			{% elif not listing.status %}
+				<p class="h2"><span class="indent">Final Bid:</span> {{listing.highest| usd}}</p>
+			{% else %}
+				<p class="h2"><span class="indent">Offer:</span> {{listing.offer| usd}}</p>	
+			{%endif%}
+		</div>
 
 		{% if listing.status == True and user.is_authenticated and user != listing.author %}
 			{% if form.bid %}
+			<div>
 				<form action="{% url 'bid' listing.id %}" method="POST">
 					{% csrf_token %}
+					
 						<label>{{form.bid.label}} {{form.bid}}</label>
 					<input class="btn btn-primary"type="submit" value="Place">
 				</form>
+			</div>
 			{% endif %}
 		{% elif listing.status == False and user == listing.winner %}
-			<p>you have won the auction</p>
-			<p>{{listing.highest}}</p>
-		{% elif listing.status == False and listing.winner != user %}
-			<p>Auction Has Ended</p>
+		<div class="fit winning-status">
+			<p class="h6 p-3  bg-success text-white  winning-status">You Have Won</p>
+		</div>
 		{% endif %}
-		
-		{% if listing not in user.listings.all %}
-			<form action="{% url 'watchlist' listing.id %}" method="POST">
-				{% csrf_token %}
-				<input class="btn btn-primary" type="submit" value="Add TO Watch List">
-			</form>
-		{% endif %}
+	</div>
+</div>
 
-
-
-
-
-
-{% if listing.status == True and user.is_authenticated and user != listing.author %}
 
 	<div>
 		<form action="{% url 'comment' listing.id %}" method="POST">
@@ -49,19 +73,19 @@
 			<label>{{commentForm.label}} {{commentForm.comment}}</label>
 			<input class="btn btn-primary"type="submit" value="comment">
 		</form>
+	</div>
 
 
-{% endif %}
 
 	
 
-		{% if user == listing.author and listing.status == True %}
-			<form action="{% url 'endauction' listing.id %}" method="POST">
-				{% csrf_token %}
-				{{ endform }}
-				<input class="btn btn-primary"type="submit" value="Submit">
-			</form>
-		{% endif %}
+	{% if user == listing.author and listing.status == True %}
+		<form action="{% url 'endauction' listing.id %}" method="POST">
+			{% csrf_token %}
+			{{ endform }}
+			<input class="btn btn-primary"type="submit" value="Submit">
+		</form>
+	{% endif %}
 
 		
 

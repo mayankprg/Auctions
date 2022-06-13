@@ -169,7 +169,7 @@ a, a:hover, a:active{
 
 
 .item > a > p[class="title"]{
-    color: inherit;
+    color: black;
     margin-left: 5px;
     font-size: max(1.6em, 16px);
     line-height: 2em;
@@ -178,8 +178,14 @@ a, a:hover, a:active{
 }
 
 
-.about {
+
+.flex {
     display: flex;
+}
+
+
+.about {
+    
     flex-direction: column;
     height: 163px;
     justify-content: space-between;
@@ -210,8 +216,87 @@ section > h1 {
 
 
 .item:hover {
-   
+    
     transform: scale(1.06);
     transition: all 0.5s ease;
 }
 
+
+
+
+.form-cont{
+    flex-direction: column;
+    height: 75vh;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#listing-img {
+    display: block;
+    margin: auto auto;
+    
+    height: min(473.5px, 50vh)
+        
+}
+
+
+.container-fluid {
+    width: min(50vw);
+    height: 25%;
+    border: 1px solid whitesmoke;
+}
+
+
+.info {
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 47vw;
+    padding: 0 10px 10px 10px;
+    gap: 10px;
+}
+
+.listitem {
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    
+}
+
+
+@media (max-width: 800px){
+
+    .container-fluid {
+        width: 100%;
+    }
+
+    .info {
+        width: 100%;
+    }
+
+
+}
+
+
+#item-add {
+    align-self: flex-end;
+}
+
+
+.fit {
+    width: fit-content;
+}
+
+.winning-status {
+    border-radius: 15px;
+    align-self: center;
+    
+}
+
+#author {
+    align-self: flex-end;
+}
+
+
+.lead {
+    padding: 10px;
+}

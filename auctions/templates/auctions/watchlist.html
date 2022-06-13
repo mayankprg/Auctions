@@ -7,10 +7,7 @@
     {% for listing in watchList %}
 
         <p>{{listing.title}}</p>
-        <form action="{% url 'removelisting' listing.id %}" method="POST">
-            {% csrf_token %}
-            <input type="submit" value="Remove">
-        </form>
+        
     {% endfor %}
 
 

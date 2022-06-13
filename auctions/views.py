@@ -12,11 +12,11 @@ from django.contrib import messages
 
 
 class NewForm(forms.Form):
-    title = forms.CharField(label="Title")
-    discription = forms.CharField(label="Discription", max_length=500, widget=forms.Textarea())
-    starting_bid = forms.FloatField(label="Starting Bid", min_value=1)
-    image_url = forms.CharField(label="Image URL(optional)", required=False)
-    category = forms.CharField(label="Category(optional)", required=False)
+    title = forms.CharField(label="Title", widget=forms.TextInput(attrs={'class':'form-control'}))
+    discription = forms.CharField(label="Discription", max_length=500, widget=forms.Textarea(attrs={'class':'form-control'}))
+    starting_bid = forms.FloatField(label="Starting Bid", widget=forms.NumberInput(attrs={'class': ' form-control'}), min_value=1)
+    image_url = forms.CharField(label="Image URL(optional)", widget=forms.URLInput(attrs={'class':'form-control'}), required=False)
+    category = forms.CharField(label="Category(optional)", widget=forms.TextInput(attrs={'class':'form-control'}), required=False)
 
 
 class BidForm(forms.Form):
@@ -267,25 +267,6 @@ def watch_list(request, id_listing=''):
             return redirect("listitem", id_listing)
 
 
-def remove_watchlist(request, id_listing):
-	""" remove listing from user's watchlist """
-	user = User.objects.get(username=request.user)
-	if Listing.objects.filter(id=id_listing).exists():
-		listing = Listing.objects.get(id=id_listing)
-	else:
-		# TODO add error message
-		return render(request, "auctions/watchlist.html",{
-			"error": "no listing found"
-		})
-
-	if request.method == "POST":
-		# remove user from watch list if user is added in watch list 
-		if listing in user.listings.all():
-			listing.watch_list.remove(user)
-			return redirect("watchlist")
-		else:messages.error(request, "listing not in your watch list")
-		return render(request, "auctions/watchlist.html")
-
 
 def categories(request):
     """show categories"""
@@ -313,17 +294,48 @@ def category(request, category):
 
 
 
-
-
-
-
-
-
-
-
+def remove_watchlist(request, id_listing):
+    """ remove listing from user's watchlist """ 
+    
+	try:
+		user = User.objects.get(username=request.user)
+		listing = Listing.objects.get(id=id_listing)
+	except:
+		return redirect("listitem", id_listing)
+	else:
+		return redirect("listitem", id_listing)
 
 
 """
+
+	messages.error(request, "No Listing")
+			return redirect("listitem", id_listing)
+
+        if listing in user.listings.all():
+			listing.watch_list.remove(user)
+			
+      
+
+
+
+    try:
+		
+	except:
+		
+
+    if request.method == "POST":
+		pass
+            
+        
+
+
+
+
+
+
+
+
+
 
 
 change models 

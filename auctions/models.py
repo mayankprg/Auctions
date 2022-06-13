@@ -37,6 +37,10 @@ class Bid(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="on_auction") 
     created = models.DateTimeField(default=timezone.now)
 
+    def highest(self):
+        
+        return 
+
     def __str__(self):
         return f"userId: {self.bidder}"
 

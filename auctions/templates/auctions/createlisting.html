@@ -5,28 +5,47 @@
 
     <h2>Create Listings</h2>
     
-
     <form action="{% url 'createlisting' %}" method="post">
-        {% csrf_token %}
-        <label for="{{form.title.id_for_label}}">{{form.title.label}}  
-            {{form.title}}
-        </label>
-        <label for="{{form.discription.id_for_label}}">{{form.discription.label}}  
-            {{form.discription}}
-        </label>       
-        <label for="{{form.starting_bid.id_for_label}}">{{form.starting_bid.label}}  
-            {{form.starting_bid}}
-        </label>
-
-        <label for="{{form.image_url.id_for_label}}">{{form.image_url.label}}  
-            {{form.image_url}}
-        </label>
-
-        <label for="{{form.category.id_for_label}}">{{form.category.label}}  
-            {{form.category}}
-        </label>
-        <input class="btn btn-primary" type="submit" value="publish">
+        <div class="form-group form-cont flex"></section>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{form.title.id_for_label}}"><p>{{form.title.label}}</p>  
+                    {{form.title}}
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="{{form.discription.id_for_label}}"><p>{{form.discription.label}}</p>  
+                    {{form.discription}}
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="{{form.starting_bid.id_for_label}}"><p>{{form.starting_bid.label}}</p>  
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">$</div>
+                          </div>
+                        {{form.starting_bid}}
+                    </div>
+                    
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="{{form.image_url.id_for_label}}"><p>{{form.image_url.label}}</p>  
+                    {{form.image_url}}
+                </label>
+            </div> 
+            <div class="form-group">
+                <label for="{{form.category.id_for_label}}"><p>{{form.category.label}}</p>  
+                    {{form.category}}
+                </label>
+            </div>
+            <div class="form-group">
+                <input class="btn btn-primary" type="submit" value="Publish">
+            </div>
+        </div>
     </form>
 
+
+    
 
 {% endblock %}
