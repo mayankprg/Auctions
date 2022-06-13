@@ -20,8 +20,9 @@ class Listing(models.Model):
     category = models.CharField(max_length=250)
     status = models.BooleanField(default=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_user')
-    highest = models.ForeignKey("Bid", on_delete=models.PROTECT, null=True, blank=True, related_name='bid_user')
+    highest = models.FloatField(blank=True)
     created = models.DateTimeField(default=timezone.now)
+    winner = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, related_name="auction_winner")
     watch_list = models.ManyToManyField(User, blank=True, related_name='listings')
     
     def __str__(self):
