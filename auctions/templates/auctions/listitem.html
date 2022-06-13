@@ -22,10 +22,10 @@
 					<input class="btn btn-primary"type="submit" value="Place">
 				</form>
 			{% endif %}
-		{% elif listing.status == False and fumes2 == listing.highest|slice:2 %}
+		{% elif listing.status == False and user == listing.winner %}
 			<p>you have won the auction</p>
 			<p>{{listing.highest}}</p>
-		{% elif listing.status == False and listing.highest != user %}
+		{% elif listing.status == False and listing.winner != user %}
 			<p>Auction Has Ended</p>
 		{% endif %}
 		

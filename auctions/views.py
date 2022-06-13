@@ -164,9 +164,8 @@ def end_auction(request, id_listing):
                 if form_data.cleaned_data['status']:
                     # end auction
                     listing.status = False
-                    listing.save()
                     if Bid.objects.filter(bid=listing.highest, listing=listing).exists():
-                        bid = Bid.objects.filter(bid=listing.highest, listing=listing)
+                        bid = Bid.objects.get(bid=listing.highest, listing=listing)
                         listing.winner = bid.bidder
                         listing.save()
                         return redirect("listitem", listing.id)

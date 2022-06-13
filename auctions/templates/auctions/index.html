@@ -24,8 +24,8 @@
                     <p class="cursive indent">{{item.discription|truncatechars:35}}</p>
                 </article> 
                 <article id="about-2">
-                    {% if item.highest.bid %}
-                    <p><span class="bold italic">Current Price: {{item.highest.bid| usd}}</span></p>
+                    {% if item.highest %}
+                    <p><span class="bold italic">Current Price: {{item.highest| usd}}</span></p>
                     {% else %}
                     <p><span class="bold italic">Starting Price:{{item.offer| usd}}</span></p>
                     {%endif%}
