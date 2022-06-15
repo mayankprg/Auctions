@@ -300,3 +300,8 @@ section > h1 {
 .lead {
     padding: 10px;
 }
+
+#bid-form {
+    
+    align-self: center;
+}

@@ -49,12 +49,15 @@
 
 		{% if listing.status == True and user.is_authenticated and user != listing.author %}
 			{% if form.bid %}
-			<div>
+			<div id="bid-form" class="form-group">
 				<form action="{% url 'bid' listing.id %}" method="POST">
-					{% csrf_token %}
-					
-						<label>{{form.bid.label}} {{form.bid}}</label>
-					<input class="btn btn-primary"type="submit" value="Place">
+					<div class="form-group ">
+						{% csrf_token %}
+						<div class="form-group">
+							<label class="form-label" for="{{form.bid.id_for_label}}">{{form.bid.label}} {{form.bid}}</label>
+							<input class="btn btn-primary"type="submit" value="Place">
+						</div>				
+					</div>
 				</form>
 			</div>
 			{% endif %}
@@ -70,7 +73,7 @@
 	<div>
 		<form action="{% url 'comment' listing.id %}" method="POST">
 			{% csrf_token %}
-			<label>{{commentForm.label}} {{commentForm.comment}}</label>
+			<label class="form-label" for="{{commentForm.comment.id_for_label}}">{{commentForm.label}} {{commentForm.comment}}</label>
 			<input class="btn btn-primary"type="submit" value="comment">
 		</form>
 	</div>

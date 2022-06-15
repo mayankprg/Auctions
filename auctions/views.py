@@ -292,60 +292,28 @@ def category(request, category):
         return redirect("caregories")
 
 
-
-
 def remove_watchlist(request, id_listing):
     """ remove listing from user's watchlist """ 
-    
-	try:
-		user = User.objects.get(username=request.user)
-		listing = Listing.objects.get(id=id_listing)
-	except:
-		return redirect("listitem", id_listing)
-	else:
-		return redirect("listitem", id_listing)
+    user = User.objects.get(username=request.user)
+    try:
+        listing = Listing.objects.get(id=id_listing)
+    except:
+        listing = None
+    if request.method == "POST":
+        if listing in user.listings.all():
+            listing.watch_list.remove(user)
+            return redirect("listitem", id_listing)
+        else:
+            messages.error(request, "No Listing")
+            return redirect("index")
+
+
+
 
 
 """
 
-	messages.error(request, "No Listing")
-			return redirect("listitem", id_listing)
 
-        if listing in user.listings.all():
-			listing.watch_list.remove(user)
-			
-      
-
-
-
-    try:
-		
-	except:
-		
-
-    if request.method == "POST":
-		pass
-            
-        
-
-
-
-
-
-
-
-
-
-
-
-change models 
-    add winner 
-    add highest bid 
-    
-
-
-check messaage for other things
-notify when added to watch list
 
 
 add check for every view 
