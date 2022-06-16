@@ -128,25 +128,25 @@ def listing_item(request, id_listing):
     listing = Listing.objects.get(id=id_listing)
     current_user = User.objects.get(username=request.user)
     comments = Comment.objects.filter(listing=listing).order_by('created')
-    bids = Bid.objects.filter(listing=listing)
-    
     # new bid form or ending auction form
     if request.method == "GET":       
         # this is for the bidder
         if not Bid.objects.filter(listing=listing, bidder=current_user).exists():
             return render(request, "auctions/listitem.html", {
-                    "listing": listing,
-                    "form": BidForm(),
-                    "commentForm": CommentForm(),
-                    "endform": AuctionStatus(),
-                    "comments_list": comments,
+                        "listing": listing,
+                        
+                        "form": BidForm(),
+                        "commentForm": CommentForm(),
+                        "endform": AuctionStatus(),
+                        "comments_list": comments,
                     })
         else:
             # bid already placed
             return render(request, "auctions/listitem.html", {
-                    "listing": listing,
-                    "commentForm": CommentForm(),
-                    "comments_list": comments,
+                        "listing": listing,
+                        "commentForm": CommentForm(),
+                        "comments_list": comments,
+                        
                     })
 
 
@@ -182,47 +182,23 @@ def bid(request, id_listing):
         # validate and update user's bid's
         bid_form_data = BidForm(request.POST)
         if bid_form_data.is_valid():
-            # compare with higher bid if exist any
-            if Bid.objects.filter(listing=listing).exists():
-                bid_list = Bid.objects.filter(listing=listing).order_by('-bid').first()
-                if float(bid_form_data.cleaned_data['bid']) > bid_list.bid:
-                    bid = Bid(bidder=current_user, bid=float(bid_form_data.cleaned_data['bid']), listing=listing)
-                    bid.save()
-                    listing.highest = bid.bid
-                    listing.save()
-                    messages.success(request, "Bid Placed")
-                    return render(request, "auctions/listitem.html", {
-                        "listing": listing,
-                        "bids": bids
-                    })
-                else:
-                    # error
-                    messages.error(request, "Amount Should Be Higher Than Current Bid")
-                    return render(request, "auctions/listitem.html", {
-                        "listing": listing,
-                        "form": BidForm(request.POST),
-                        "bids": bids
-                    })
+            # compare with current price
+            if float(bid_form_data.cleaned_data['bid']) > listing.current_price():
+                bid = Bid(bidder=current_user, bid=float(bid_form_data.cleaned_data['bid']), listing=listing)
+                bid.save()
+                messages.success(request, "Bid Placed")
+                return render(request, "auctions/listitem.html", {
+                    "listing": listing,
+                    "bids": bids
+                })
             else:
-                # bid list does not exists
-                if float(bid_form_data.cleaned_data['bid']) > listing.offer:
-                    bid = Bid(bidder=current_user, bid=float(bid_form_data.cleaned_data['bid']), listing=listing)
-                    bid.save()
-                    listing.highest = bid.bid
-                    listing.save()
-                    messages.success(request, "Bid Placed")
-                    return render(request, "auctions/listitem.html", {
-                        "listing": listing,
-                        "bids": bids
-                    })
-                else:
-                    # show error with form data
-                    messages.error(request, "Amount Should Be Higher Than Starting Bid") 
-                    return render(request, "auctions/listitem.html", {
-                        "listing": listing,
-                        "form": BidForm(request.POST),
-                        "bids": bids
-                    })
+                # error
+                messages.error(request, "Amount Should Be Higher Than Current Bid")
+                return render(request, "auctions/listitem.html", {
+                    "listing": listing,
+                    "form": BidForm(request.POST),
+                    "bids": bids
+                })
 
 
 @login_required(login_url="login")

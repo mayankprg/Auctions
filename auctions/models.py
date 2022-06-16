@@ -6,8 +6,12 @@ from django.db import models
 
 
 class User(AbstractUser):
-    
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
+
+
+# class categories(models.Model):
+
+#     pass
 
 
 class Listing(models.Model):
@@ -19,12 +23,27 @@ class Listing(models.Model):
     url = models.URLField()
     category = models.CharField(max_length=250)
     status = models.BooleanField(default=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_user')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     highest = models.FloatField(blank=True, null=True)
     created = models.DateTimeField(default=timezone.now)
-    winner = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, related_name="auction_winner")
-    watch_list = models.ManyToManyField(User, blank=True, related_name='listings')
-    
+    winner = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, related_name="winner")
+    watch_list = models.ManyToManyField(User, blank=True, related_name='onlooker')
+
+    def total_bids(self):
+        return self.bids.all().count()
+
+    def total_comments(self):
+        return self.comment.all().count()
+
+    def highest_bid(self):
+        return self.bids.all().order_by('-bid').first().bid
+        
+    def current_price(self):
+        if self.bids.all().exists():
+            return self.highest_bid()
+        else:
+            return self.offer
+        
     def __str__(self):
         return f"{self.title}"
 
@@ -34,12 +53,10 @@ class Bid(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     bid = models.FloatField()
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_bidder')
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="on_auction") 
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids") 
     created = models.DateTimeField(default=timezone.now)
 
-    def highest(self):
-        
-        return 
+   
 
     def __str__(self):
         return f"userId: {self.bidder}"
@@ -49,7 +66,7 @@ class Comment(models.Model):
 
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comment')
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='on_listing')
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='comment')
     comment = models.TextField(max_length=200, blank=True)
     created = models.DateTimeField(default=timezone.now)
 
