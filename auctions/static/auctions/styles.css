@@ -305,3 +305,26 @@ section > h1 {
     
     align-self: center;
 }
+
+
+.comment {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
+
+.divider {
+    margin: 10px 0;
+    border-bottom: 1px solid #888989;
+}
+
+.comments {
+    flex-direction: column;
+}
+
+
+.comments > p[class="h2"] {
+    align-self: flex-start;
+}

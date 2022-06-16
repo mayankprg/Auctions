@@ -43,7 +43,13 @@ class Listing(models.Model):
             return self.highest_bid()
         else:
             return self.offer
-        
+
+    def winner(self):
+        if self.current_price() > self.offer:
+            return  self.bids.all().order_by('-bid').first().bidder_id
+        else:
+            return None
+
     def __str__(self):
         return f"{self.title}"
 

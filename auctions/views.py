@@ -128,6 +128,9 @@ def listing_item(request, id_listing):
     listing = Listing.objects.get(id=id_listing)
     current_user = User.objects.get(username=request.user)
     comments = Comment.objects.filter(listing=listing).order_by('created')
+
+    
+    
     # new bid form or ending auction form
     if request.method == "GET":       
         # this is for the bidder
@@ -155,7 +158,6 @@ def end_auction(request, id_listing):
     """ Ends auction """
     listing = Listing.objects.get(id=id_listing)
     current_user = User.objects.get(username=request.user)
-    
     if request.method == "POST":
         if current_user == listing.author:
             # validate author's form 
@@ -164,12 +166,11 @@ def end_auction(request, id_listing):
                 if form_data.cleaned_data['status']:
                     # end auction
                     listing.status = False
-                    if Bid.objects.filter(bid=listing.highest, listing=listing).exists():
-                        bid = Bid.objects.get(bid=listing.highest, listing=listing)
-                        listing.winner = bid.bidder
+                    winner = listing.winner()
+                    if winner:
+                        listing.winner = User.objects.get(id=winner)
                         listing.save()
-                        return redirect("listitem", listing.id)
-
+                    return redirect("listitem", listing.id)
 
 
 @login_required(login_url="login")
@@ -234,14 +235,13 @@ def watch_list(request, id_listing=''):
     if request.method == "POST":
         listing = Listing.objects.get(id=id_listing)
         # add user to listing's watch lists
-        if Listing.objects.filter(id=id_listing).exists() and not listing in user.listings.all():
+        if Listing.objects.filter(id=id_listing).exists() and not listing in user.onlooker.all():
             listing.save()
             listing.watch_list.add(user)
             return redirect("listitem", id_listing)
         else:
             messages.error(request, "Could not add")
             return redirect("listitem", id_listing)
-
 
 
 def categories(request):
@@ -276,7 +276,7 @@ def remove_watchlist(request, id_listing):
     except:
         listing = None
     if request.method == "POST":
-        if listing in user.listings.all():
+        if listing in user.onlooker.all():
             listing.watch_list.remove(user)
             return redirect("listitem", id_listing)
         else:
@@ -286,14 +286,5 @@ def remove_watchlist(request, id_listing):
 
 
 
-
-"""
-
-
-
-
-add check for every view 
-
-"""
 
 
