@@ -9,9 +9,7 @@ class User(AbstractUser):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
 
 
-# class categories(models.Model):
 
-#     pass
 
 
 class Listing(models.Model):
@@ -23,8 +21,7 @@ class Listing(models.Model):
     url = models.URLField()
     category = models.CharField(max_length=250)
     status = models.BooleanField(default=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
-    highest = models.FloatField(blank=True, null=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auction')
     created = models.DateTimeField(default=timezone.now)
     winner = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, related_name="winner")
     watch_list = models.ManyToManyField(User, blank=True, related_name='onlooker')
@@ -50,6 +47,9 @@ class Listing(models.Model):
         else:
             return None
 
+    def categories(self):
+        return self.categories.all()
+
     def __str__(self):
         return f"{self.title}"
 
@@ -61,8 +61,6 @@ class Bid(models.Model):
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_bidder')
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids") 
     created = models.DateTimeField(default=timezone.now)
-
-   
 
     def __str__(self):
         return f"userId: {self.bidder}"

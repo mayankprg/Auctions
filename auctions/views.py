@@ -20,7 +20,7 @@ class NewForm(forms.Form):
 
 
 class BidForm(forms.Form):
-    bid = forms.FloatField(label="Bid", min_value=1)
+    bid = forms.FloatField(label="Bid", widget=forms.NumberInput(attrs={'class': ' form-control'}), min_value=1)
     
     
 
@@ -29,7 +29,7 @@ class AuctionStatus(forms.Form):
 
 
 class CommentForm(forms.Form):
-    comment = forms.CharField(label="comment", max_length=200)
+    comment = forms.CharField(label="comment",widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 40}), max_length=200)
     
 
 def index(request):
@@ -128,9 +128,6 @@ def listing_item(request, id_listing):
     listing = Listing.objects.get(id=id_listing)
     current_user = User.objects.get(username=request.user)
     comments = Comment.objects.filter(listing=listing).order_by('created')
-
-    
-    
     # new bid form or ending auction form
     if request.method == "GET":       
         # this is for the bidder
@@ -149,7 +146,6 @@ def listing_item(request, id_listing):
                         "listing": listing,
                         "commentForm": CommentForm(),
                         "comments_list": comments,
-                        
                     })
 
 
@@ -206,7 +202,6 @@ def bid(request, id_listing):
 def comment(request, id_listing):
     user = User.objects.get(username=request.user)
     listing = Listing.objects.get(id=id_listing)
-
     if request.method == "POST":
         form_data = CommentForm(request.POST)
         if form_data.is_valid():

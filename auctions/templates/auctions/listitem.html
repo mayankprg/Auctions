@@ -8,9 +8,7 @@
 	<div class="container-fluid ">
 		<img src="{{listing.url}}" id="listing-img" class="img-fluid" alt="Image of {{listing.title}}">
 	</div>
-			
 	<div class="info flex">
-
 		{% if listing not in user.onlooker.all %}
 			<div class="form-group fit-inline-block" id="item-add">
 				<form action="{% url 'watchlist' listing.id %}" method="POST">
@@ -36,7 +34,6 @@
 			<p class="h5"><span class="font-weight-bold">Author:</span> <span class="cursive">{{listing.author}}</span></p>
 			<footer class="blockquote-footer">Created: <cite title="Source Title">{{listing.created}}</cite></footer>
 		</div>
-		
 		<div>
 			 <P class="h6 indent">Total Bids<span class="badge badge-secondary">{{listing.total_bids}}</span></P>
 			{% if listing.highest_bid and listing.status %}
@@ -46,9 +43,7 @@
 			{% else %}
 				<p class="h2"><span class="indent">Offer:</span> {{listing.offer| usd}}</p>	
 			{%endif%}
-				
 		</div>
-
 		{% if listing.status == True and user.is_authenticated and user != listing.author %}
 			{% if form.bid %}
 			<div id="bid-form" class="form-group">
@@ -68,50 +63,42 @@
 			<p class="h6 p-3  bg-success text-white  winning-status">You Have Won</p>
 		</div>
 		{% endif %}
-	</div>
-</div>
-
-{% if user == listing.author and listing.status == True %}
-		<div>
+		{% if user == listing.author and listing.status == True %}
+		<div class="form-group">
 			<form action="{% url 'endauction' listing.id %}" method="POST">
 				{% csrf_token %}
 				{{ endform }}
 				<input class="btn btn-primary"type="submit" value="Submit">
 			</form>
 		</div>
-			
-{% endif %}
+		{% endif %}
 
+	</div>
+</div>
 
-	
 <div class="divider"></div>
-
 	<div class="flex comment">
-		<div>
+		<div id="comment-form">
 			<form action="{% url 'comment' listing.id %}" method="POST">
 				{% csrf_token %}
-				<label class="form-label" for="{{commentForm.comment.id_for_label}}">{{commentForm.label}} {{commentForm.comment}}</label>
+				<div class="form-group">
+					{{commentForm.comment}}	
+				</div>
 				<div class="form-group">
 					<input class="btn btn-success"type="submit" value="Comment">
 				</div>
 			</form>
 		</div>
 		<div class="flex comments">
-			<p class="h2">Comments</p>
+			<p class="h2">Comments <span class="badge badge-info sm ">{{listing.total_comments}}</span></p>
 			{% for comments in comments_list %}
-
-			<div>
+			<div class="all-comments">
 				<p>{{comments.comment}}</p>
-				<p><span class="badge badge-info"> {{comments.author.username}}</span></p>
+				<p><span class="badge badge-info">{{comments.author.username}}</span></p>
 			</div>
-			
 			{% endfor %}
 		</div>
-	
 	</div>
-
-	
-
 
 
 {% endblock %}

@@ -5,9 +5,6 @@
 <section>
     <h1>Active Listings</h1>
 </section>
-    
-
-
 <div class="container flex">
     {% for item in listings %}
         <div class="item">
@@ -24,15 +21,9 @@
                     <p class="cursive indent ">{{item.discription|truncatechars:35}}</p>
                 </article> 
                 <article id="about-2">
-                    {% if item.highest %}
-                    <p><span class="bold italic">Current Price: {{item.highest| usd}}</span></p>
-                    {% else %}
-                    <p><span class="bold italic">Starting Price:{{item.offer| usd}}</span></p>
-                    {%endif%}
+                    <p><span class="bold italic">Current Price: {{item.current_price| usd}}</span></p>
                 </article>
-                <article id="about-3">
-                    <p class="sm"><span class="italic bold">Created:</span> {{item.created}}</p>
-                </article>
+                
             </div>
         </div>
     {% endfor %}

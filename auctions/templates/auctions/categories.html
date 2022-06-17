@@ -2,12 +2,18 @@
 {% load static %}
 
 {% block body %}
-	<h2>Categories</h2>
-
 	
-
+	<p class="h1">Categories</p>
+		
+	<div class="flex cats">
 	{% for item in listings %}
-		<span><a href="{%url 'category' item.category %}">{{item.category}}</a></span>
+	
+		<div class=" cat">
+			<span><a href="{%url 'category' item.category %}">{{item.category}}</a></span>
+		</div>
+		
+	
+		
 	{% endfor %}
-
+</div>
 {% endblock %}
