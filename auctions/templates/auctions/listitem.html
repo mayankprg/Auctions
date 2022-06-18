@@ -37,11 +37,11 @@
 		<div>
 			 <P class="h6 indent">Total Bids<span class="badge badge-secondary">{{listing.total_bids}}</span></P>
 			{% if listing.highest_bid and listing.status %}
-				<p class="h2"><span class="indent">Current Bid:</span> {{listing.highest_bid| usd}}</p>	
+				<p class="h4"><span class="indent">Current Bid:</span> {{listing.highest_bid| usd}}</p>	
 			{% elif not listing.status %}
-				<p class="h2"><span class="indent">Final Bid:</span> {{listing.highest_bid| usd}}</p>
+				<p class="h4"><span class="indent">Final Bid:</span> {{listing.highest_bid| usd}}</p>
 			{% else %}
-				<p class="h2"><span class="indent">Offer:</span> {{listing.offer| usd}}</p>	
+				<p class="h4"><span class="indent">Offer:</span> {{listing.offer| usd}}</p>	
 			{%endif%}
 		</div>
 		{% if listing.status == True and user.is_authenticated and user != listing.author %}
@@ -52,7 +52,7 @@
 						{% csrf_token %}
 						<div class="form-group">
 							<label class="form-label" for="{{form.bid.id_for_label}}">{{form.bid.label}} {{form.bid}}</label>
-							<input class="btn btn-primary"type="submit" value="Place">
+							<input class="btn btn-primary"type="submit" value="Place Bid">
 						</div>				
 					</div>
 				</form>

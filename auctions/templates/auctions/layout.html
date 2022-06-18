@@ -26,7 +26,9 @@
                         </li>
                         {% if user.is_authenticated %}
                             <li>
-                                <a href="{% url 'watchlist' %}">Watch List</a>
+                                <a href="{% url 'watchlist' %}">
+                                    Watch List <span class="badge badge-secondary h6">{{user.watchlist_count}}</span>
+                                </a>
                             </li>
                             <li>
                                 <a href="{% url 'categories' %}">Categories</a>

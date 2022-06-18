@@ -13,7 +13,7 @@ from django.contrib import messages
 
 class NewForm(forms.Form):
     title = forms.CharField(label="Title", widget=forms.TextInput(attrs={'class':'form-control'}))
-    discription = forms.CharField(label="Discription", max_length=500, widget=forms.Textarea(attrs={'class':'form-control'}))
+    discription = forms.CharField(label="Discription", max_length=500, widget=forms.Textarea(attrs={'class':'form-control','rows': 4, 'cols': 40}))
     starting_bid = forms.FloatField(label="Starting Bid", widget=forms.NumberInput(attrs={'class': ' form-control'}), min_value=1)
     image_url = forms.CharField(label="Image URL(optional)", widget=forms.URLInput(attrs={'class':'form-control'}), required=False)
     category = forms.CharField(label="Category(optional)", widget=forms.TextInput(attrs={'class':'form-control'}), required=False)
@@ -128,13 +128,13 @@ def listing_item(request, id_listing):
     listing = Listing.objects.get(id=id_listing)
     current_user = User.objects.get(username=request.user)
     comments = Comment.objects.filter(listing=listing).order_by('created')
+    
     # new bid form or ending auction form
     if request.method == "GET":       
         # this is for the bidder
         if not Bid.objects.filter(listing=listing, bidder=current_user).exists():
             return render(request, "auctions/listitem.html", {
-                        "listing": listing,
-                        
+                        "listing": listing, 
                         "form": BidForm(),
                         "commentForm": CommentForm(),
                         "endform": AuctionStatus(),
