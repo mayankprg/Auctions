@@ -162,7 +162,7 @@ def end_auction(request, id_listing):
                 if form_data.cleaned_data['status']:
                     # end auction
                     listing.status = False
-                    winner = listing.winner()
+                    winner = listing.winner_user()
                     if winner:
                         listing.winner = User.objects.get(id=winner)
                         listing.save()

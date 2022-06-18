@@ -6,15 +6,12 @@ from django.db import models
 
 
 class User(AbstractUser):
-    id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
-
-
-
+    def watchlist_count(self):
+        return self.onlooker.all().count()
 
 
 class Listing(models.Model):
 
-    id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     title = models.CharField(max_length=65)
     discription = models.TextField(max_length=500)
     offer = models.FloatField(blank=False)
@@ -41,7 +38,7 @@ class Listing(models.Model):
         else:
             return self.offer
 
-    def winner(self):
+    def winner_user(self):
         if self.current_price() > self.offer:
             return  self.bids.all().order_by('-bid').first().bidder_id
         else:
@@ -56,9 +53,8 @@ class Listing(models.Model):
 
 class Bid(models.Model):
 
-    id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     bid = models.FloatField()
-    bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_bidder')
+    bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bid_amount')
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids") 
     created = models.DateTimeField(default=timezone.now)
 
@@ -68,7 +64,6 @@ class Bid(models.Model):
 
 class Comment(models.Model):
 
-    id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comment')
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='comment')
     comment = models.TextField(max_length=200, blank=True)

@@ -90,11 +90,12 @@
 			</form>
 		</div>
 		<div class="flex comments">
-			<p class="h2">Comments <span class="badge badge-info sm ">{{listing.total_comments}}</span></p>
+			<p class="h2 indent">Comments <span class="badge badge-info sm ">{{listing.total_comments}}</span></p>
 			{% for comments in comments_list %}
-			<div class="all-comments">
-				<p>{{comments.comment}}</p>
-				<p><span class="badge badge-info">{{comments.author.username}}</span></p>
+			<div class="all-comments flex">
+				<p class="font-weight-light h6"><strong>User:</strong> <span class="badge badge-info sm">{{comments.author.username}}</span></p>
+				<p class="font-weight-normal comment-text">{{comments.comment}}</p>
+				<footer class="blockquote-footer">Commented: <cite title="Source Title">{{comments.created}}</cite></footer>
 			</div>
 			{% endfor %}
 		</div>
