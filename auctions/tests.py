@@ -5,6 +5,3 @@ from django.test import TestCase
 
 from auctions.models import Listing
 
-class listingTest(TestCase):
-    
-    
