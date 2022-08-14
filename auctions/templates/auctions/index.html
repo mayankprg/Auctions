@@ -1,0 +1,32 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+<section>
+    <h1>Active Listings</h1>
+</section>
+<div class="container flex">
+    {% for item in listings %}
+        <div class="item">
+            <a href="{% url 'listitem' item.id %}">
+                <div class="img">
+                    <img src="{{ item.url }}" alt="Listing Image">
+                </div>
+            </a>
+            <div class="about flex">
+                <a href="{% url 'listitem' item.id %}">
+                    <p class="title h2">{{item.title}}</p>
+                </a> 
+                <article id="about-1">
+                    <p class="cursive indent ">{{item.discription|truncatechars:35}}</p>
+                </article> 
+                <article id="about-2">
+                    <p><span class="bold italic">Current Price: {{item.current_price| usd}}</span></p>
+                </article>
+                
+            </div>
+        </div>
+    {% endfor %}
+</div>
+    
+{% endblock %}

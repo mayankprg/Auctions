@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+	
+	<p class="h1">Categories</p>
+		
+	<div class="flex cats">
+	{% for item in listings %}
+	
+		<div class=" cat">
+			<span><a href="{%url 'category' item.category %}">{{item.category}}</a></span>
+		</div>
+		
+	
+		
+	{% endfor %}
+</div>
+{% endblock %}

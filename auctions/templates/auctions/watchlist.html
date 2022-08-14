@@ -1,0 +1,31 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+ 
+ 
+    <h1>Watch List</h1>
+    <div class="watchlist flex">
+    {% for listing in watchList %}
+        <div class="item">
+            <a href="{% url 'listitem' listing.id %}">
+                <div class="img">
+                    <img src="{{ listing.url }}" alt="Listing Image">
+                </div>
+            </a>
+            <div class="info-watchlist flex">
+                <a href="{% url 'listitem' listing.id %}">
+                    <p class="h2">{{listing.title}}</p>
+                </a> 
+                {% if listing.status%}
+                    <p>Active</p>
+                {%else%}
+                    <p>Ended</p>
+                {%endif%}
+                <p><span class="bold italic">Current Price: {{listing.current_price| usd}}</span></p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<div class="listitem flex">
+	<div class="container-fluid ">
+		<img src="{{listing.url}}" id="listing-img" class="img-fluid" alt="Image of {{listing.title}}">
+	</div>
+	<div class="info flex">
+		{% if listing not in user.onlooker.all %}
+			<div class="form-group fit-inline-block" id="item-add">
+				<form action="{% url 'watchlist' listing.id %}" method="POST">
+					{% csrf_token %}
+					<input class="btn btn-primary" type="submit" value="Add To Watch List">
+				</form>
+			</div>
+		{% else %}
+			<div class="form-group fit-inline-block" id="item-add">
+				<form action="{% url 'removelisting' listing.id %}" method="POST">
+					{% csrf_token %}
+					<input class="btn btn-danger" type="submit" value="Remove From WatchList">
+				</form>
+			</div>	
+		{% endif %}
+		<div>
+			<p class="h1 ">{{listing.title}}</p>
+		</div>
+		<div>
+			<p class="lead">{{listing.discription}}</p>
+		</div>
+		<div id="author">
+			<p class="h5"><span class="font-weight-bold">Author:</span> <span class="cursive">{{listing.author}}</span></p>
+			<footer class="blockquote-footer">Created: <cite title="Source Title">{{listing.created}}</cite></footer>
+		</div>
+		<div>
+			 <P class="h6 indent">Total Bids<span class="badge badge-secondary">{{listing.total_bids}}</span></P>
+			{% if listing.highest_bid and listing.status %}
+				<p class="h4"><span class="indent">Current Bid:</span> {{listing.highest_bid| usd}}</p>	
+			{% elif not listing.status %}
+				<p class="h4"><span class="indent">Final Bid:</span> {{listing.highest_bid| usd}}</p>
+			{% else %}
+				<p class="h4"><span class="indent">Offer:</span> {{listing.offer| usd}}</p>	
+			{%endif%}
+		</div>
+		{% if listing.status == True and user.is_authenticated and user != listing.author %}
+			{% if form.bid %}
+			<div id="bid-form" class="form-group">
+				<form action="{% url 'bid' listing.id %}" method="POST">
+					<div class="form-group ">
+						{% csrf_token %}
+						<div class="form-group">
+							<label class="form-label" for="{{form.bid.id_for_label}}">{{form.bid.label}} {{form.bid}}</label>
+							<input class="btn btn-primary"type="submit" value="Place Bid">
+						</div>				
+					</div>
+				</form>
+			</div>
+			{% endif %}
+		{% elif listing.status == False and user == listing.winner %}
+		<div class="fit winning-status">
+			<p class="h6 p-3  bg-success text-white  winning-status">You Have Won</p>
+		</div>
+		{% endif %}
+		{% if user == listing.author and listing.status == True %}
+		<div class="form-group">
+			<form action="{% url 'endauction' listing.id %}" method="POST">
+				{% csrf_token %}
+				{{ endform }}
+				<input class="btn btn-primary"type="submit" value="Submit">
+			</form>
+		</div>
+		{% endif %}
+
+	</div>
+</div>
+
+<div class="divider"></div>
+	<div class="flex comment">
+		<div id="comment-form">
+			<form action="{% url 'comment' listing.id %}" method="POST">
+				{% csrf_token %}
+				<div class="form-group">
+					{{commentForm.comment}}	
+				</div>
+				<div class="form-group">
+					<input class="btn btn-success"type="submit" value="Comment">
+				</div>
+			</form>
+		</div>
+		<div class="flex comments">
+			<p class="h2 indent">Comments <span class="badge badge-info sm ">{{listing.total_comments}}</span></p>
+			{% for comments in comments_list %}
+			<div class="all-comments flex">
+				<p class="font-weight-light h6"><strong>User:</strong> <span class="badge badge-info sm">{{comments.author.username}}</span></p>
+				<p class="font-weight-normal comment-text">{{comments.comment}}</p>
+				<footer class="blockquote-footer">Commented: <cite title="Source Title">{{comments.created}}</cite></footer>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+
+
+{% endblock %}
+
+	
+
