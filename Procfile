@@ -1,1 +1,3 @@
-heroku ps:scale web=1 -a prg-mail
+web: gunicorn commerce.wsgi --log-file -
+
+heroku ps:scale web=1 -a prg-com
