@@ -3,9 +3,12 @@
 
 {% block body %}
  
- 
+<section>
     <h1>Watch List</h1>
+</section>
+   
     <div class="watchlist flex">
+        
     {% for listing in watchList %}
         <div class="item">
             <a href="{% url 'listitem' listing.id %}">
@@ -15,12 +18,12 @@
             </a>
             <div class="info-watchlist flex">
                 <a href="{% url 'listitem' listing.id %}">
-                    <p class="h2">{{listing.title}}</p>
+                    <p class="h2">{{listing.title|truncatechars:25}}</p>
                 </a> 
                 {% if listing.status%}
-                    <p>Active</p>
+                    <p> <strong>Status: </strong><span class="badge badge-pill  badge-info ">Active</span></p>
                 {%else%}
-                    <p>Ended</p>
+                <p> <strong>Status: </strong><span class="badge badge-pill  badge-secondary ">Ended</span></p>
                 {%endif%}
                 <p><span class="bold italic">Current Price: {{listing.current_price| usd}}</span></p>
             </div>

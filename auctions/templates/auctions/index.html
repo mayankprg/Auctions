@@ -14,15 +14,15 @@
                 </div>
             </a>
             <div class="about flex">
-                <a href="{% url 'listitem' item.id %}">
-                    <p class="title h2">{{item.title}}</p>
+                <a class="title" href="{% url 'listitem' item.id %}">
+                    <p class="font-sz-medium ">{{item.title|truncatechars:25}}</p>
                 </a> 
+                <article id="about-2">
+                    <p><span class="bold  italic">Current Price: {{item.current_price| usd}}</span></p>
+                </article>
                 <article id="about-1">
                     <p class="cursive indent ">{{item.discription|truncatechars:35}}</p>
                 </article> 
-                <article id="about-2">
-                    <p><span class="bold italic">Current Price: {{item.current_price| usd}}</span></p>
-                </article>
                 
             </div>
         </div>

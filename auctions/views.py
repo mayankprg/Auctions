@@ -1,4 +1,3 @@
-import re
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -14,28 +13,28 @@ from django.contrib import messages
 class NewForm(forms.Form):
     title = forms.CharField(label="Title", widget=forms.TextInput(attrs={'class':'form-control'}))
     discription = forms.CharField(label="Discription", max_length=500, widget=forms.Textarea(attrs={'class':'form-control','rows': 4, 'cols': 40}))
-    starting_bid = forms.FloatField(label="Starting Bid", widget=forms.NumberInput(attrs={'class': ' form-control'}), min_value=1)
+    starting_bid = forms.FloatField(label="Starting Bid", widget=forms.NumberInput(attrs={'class': 'form-control'}), min_value=1)
     image_url = forms.CharField(label="Image URL(optional)", widget=forms.URLInput(attrs={'class':'form-control'}), required=False)
     category = forms.CharField(label="Category(optional)", widget=forms.TextInput(attrs={'class':'form-control'}), required=False)
 
 
 class BidForm(forms.Form):
     bid = forms.FloatField(label="Bid", widget=forms.NumberInput(attrs={'class': ' form-control'}), min_value=1)
-    
-    
+
 
 class AuctionStatus(forms.Form):
     status = forms.CharField(label="End Auction", widget=forms.CheckboxInput())
 
 
 class CommentForm(forms.Form):
-    comment = forms.CharField(label="comment",widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 40}), max_length=200)
+    comment = forms.CharField(label="comment", widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 40, 'placeholder':"Comment Here!"}), max_length=200)
     
 
 def index(request):
     """ View all listings, default route """
+    
     return render(request, "auctions/index.html", {
-        "listings": Listing.objects.all()
+        "listings": Listing.objects.filter(status=True)
     })
 
 
@@ -174,6 +173,7 @@ def bid(request, id_listing):
     listing = Listing.objects.get(id=id_listing)
     current_user = User.objects.get(username=request.user)
     bids = Bid.objects.filter(listing=listing)
+    comments = Comment.objects.filter(listing=listing).order_by('created')
 
     if request.method == "POST":
         # validate and update user's bid's
@@ -186,7 +186,8 @@ def bid(request, id_listing):
                 messages.success(request, "Bid Placed")
                 return render(request, "auctions/listitem.html", {
                     "listing": listing,
-                    "bids": bids
+                    "bids": bids,
+                    "comments_list": comments,
                 })
             else:
                 # error
@@ -194,7 +195,8 @@ def bid(request, id_listing):
                 return render(request, "auctions/listitem.html", {
                     "listing": listing,
                     "form": BidForm(request.POST),
-                    "bids": bids
+                    "bids": bids,
+                    "comments_list": comments,
                 })
 
 

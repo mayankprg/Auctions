@@ -30,7 +30,7 @@
 			<p class="lead">{{listing.discription}}</p>
 		</div>
 		<div id="author">
-			<p class="h5"><span class="font-weight-bold">Author:</span> <span class="cursive">{{listing.author}}</span></p>
+			<p class="h5"><span class="font-weight-bold">Author:</span> <span class="cursive">{{listing.author| lower|capfirst}}</span></p>
 			<footer class="blockquote-footer">Created: <cite title="Source Title">{{listing.created}}</cite></footer>
 		</div>
 		<div>
@@ -78,7 +78,7 @@
 <div class="divider"></div>
 	<div class="flex comment">
 		<div id="comment-form">
-			<form action="{% url 'comment' listing.id %}" method="POST">
+			<form action="{% url 'comment' listing.id %}" method="POST" >
 				{% csrf_token %}
 				<div class="form-group">
 					{{commentForm.comment}}	
@@ -92,9 +92,10 @@
 			<p class="h2 indent">Comments <span class="badge badge-info sm ">{{listing.total_comments}}</span></p>
 			{% for comments in comments_list %}
 			<div class="all-comments flex">
-				<p class="font-weight-light h6"><strong>User:</strong> <span class="badge badge-info sm">{{comments.author.username}}</span></p>
+				<p class="font-weight-light h6"> <span class="badge badge-info sm">{{comments.author.username| lower|capfirst}}</span></p>
+				<footer class="blockquote-footer font-sz-small">Commented: <cite title="Source Title">{{comments.created}}</cite></footer>
 				<p class="font-weight-normal comment-text">{{comments.comment}}</p>
-				<footer class="blockquote-footer">Commented: <cite title="Source Title">{{comments.created}}</cite></footer>
+				
 			</div>
 			{% endfor %}
 		</div>
