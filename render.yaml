@@ -3,4 +3,4 @@ services:
     name: auctions
     env: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn auctions.wsgi --log-file -"
+    startCommand: "gunicorn commerce.wsgi --log-file -"
