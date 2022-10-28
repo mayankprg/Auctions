@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: auctions
+    name: commerce
     env: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn commerce.wsgi --log-file -"
