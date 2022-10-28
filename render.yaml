@@ -4,3 +4,5 @@ services:
     env: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn auctions.wsgi:application"
+    envVars:
+      PYTHON_VERSION: 3.10.6
